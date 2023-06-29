@@ -7,6 +7,9 @@ import express from "express";
 /* Hay que importar en la app la ruta de la categoria que estemos solicitando */
 
 import categoriasRoutes from "./routes/categorias.routes.js";
+import constructorasRoutes from "./routes/constructoras.routes.js";
+import empleadosRoutes from "./routes/empleados.routes.js";
+import productosRoutes from "./routes/productos.routes.js";
 
 /* A continuación, en el archivo app.js guardamos a express donde lo habiamos importado anteriormente, y de la misma manera, tenemos que exportarlo para poder usarlo en diferentes archivos */
 const app = express();

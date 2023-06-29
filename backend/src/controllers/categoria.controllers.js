@@ -14,13 +14,30 @@ import getConnection from "./../db/database.js";
 /* 
 Hay que envolver en el controller, un try catch en caso tal de que existan errores en el mismo */
 
+
+// METODO GET 
 const getCategorias = async (req, res) => {
   try {
     const connection = await getConnection(); //Garantiza la conexion
     //.query es un metodo de la dependencia promise-mysql
     const result = await connection.query(//Consultor de los datos
-      "SELECT id_categoria, nombre_categoria, descripcion_categoria FROM categorias"
+      "SELECT id_categoria, nombre_categoria, descripcion_categoria, img_categoria FROM categorias"
     );
+    console.log(result);
+    res.json(result);
+  } catch (error) {
+    res.status(500);
+    res.send(error.message);
+  }
+};
+
+// Metodo GET ID
+const getCategoriaId= async (req, res) => {
+  try {
+    const connection = await getConnection();
+    const { id } = req.params;
+    const sql = `SELECT * FROM categorias WHERE id_categoria= ?`;
+    const result = await connection.query(sql,id);
     console.log(result);
     res.json(result);
   } catch (error) {
@@ -33,11 +50,51 @@ const getCategorias = async (req, res) => {
 const addCategorias = async(req, res) =>{
   try {
     //Se tiene que destructurar la request para almacenar datos 
-    const {nombre_categoria,descripcion_categoria} = req.body;
+    const {nombre_categoria,descripcion_categoria,img_categoria} = req.body;
     //se almacenan los datos en un literal object enhancement 
-    const category = {nombre_categoria, descripcion_categoria};
+    const category = {nombre_categoria, descripcion_categoria, img_categoria};
     const connection = await getConnection();
     const result = await connection.query("INSERT INTO categorias SET ?", category);
+    res.json(result);
+  } catch (error) {
+    res.status(500);
+    res.send(error.message);
+  }
+};
+
+// Metodo PUT
+const putCategorias = async(req, res) =>{
+  try {
+    const {id} = req.params;
+    const {nombre_categoria,descripcion_categoria,img_categoria} = req.body;
+
+    const connection = await getConnection();
+    const sql = `UPDATE categorias SET nombre_categoria =  ?, descripcion_categoria= ?, img_categoria = ? WHERE id_categoria = ?`;
+    const result = await connection.query(sql, [
+      nombre_categoria,
+      descripcion_categoria,
+      img_categoria,
+    ],id);
+    console.log(result);
+    res.json(result);
+
+  } catch (error) {
+    res.status(500);
+    res.send(error.message);
+  }
+
+
+};
+
+// Metodo DELETE
+const deleteCategorias = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const connection = await getConnection();
+    const sql = `DELETE FROM categorias WHERE id_categoria = ?`;
+    const result = await connection.query(sql,id);
+    console.log(result);
     res.json(result);
   } catch (error) {
     res.status(500);
@@ -49,5 +106,8 @@ const addCategorias = async(req, res) =>{
 /* Tenemos que exportar este controller para poder gestionarlos en nuestras routers, en este caso asignamos una constante llamada methodsHTTP, que contenga la constante que asignamos anteriormente como un get */
 export const methodsHTTP = {
   getCategorias,
-  addCategorias
+  getCategoriaId, 
+  addCategorias,
+  putCategorias,
+  deleteCategorias
 };

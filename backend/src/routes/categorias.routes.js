@@ -18,8 +18,10 @@ const router = Router();
 /* A la ruta, le asignamos el importamos el controller de methods y como este contenia la accion add para el post, por medio de un punto, le asignamos el valor de addCategorias en este caso */
 
 router.get("/", categoriaController.getCategorias);
-
+router.get("/", categoriaController.getCategoriaId);
 router.post("/", categoriaController.addCategorias);
+router.put("/", categoriaController.putCategorias);
+router.delete("/", categoriaController.deleteCategorias);
 
 //Y por ultimo exportamos la constante para poder usarla desde otros modulos
 export default router;
